@@ -17,50 +17,70 @@ If you are developing a production application, we recommend updating the config
 
 ```js
 export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    # BuscaCine
+  # BuscaCine
 
-    BuscaCine é uma plataforma para buscar e descobrir filmes, séries e atores usando a API do TMDB.
+  BuscaCine é uma plataforma para buscar e descobrir filmes, séries e atores usando a API do TMDB.
 
-    **Resumo rápido**
-    - Busca por título com paginação.
-    - Filtro opcional por ano de lançamento.
-    - Modal com detalhes do filme (sinopse, duração, nota).
-    - Imagens de pôster carregadas via CDN do TMDB.
+  Descrição
+  ---------
 
-    **Tecnologias**
-    - React + TypeScript + Vite
+  BuscaCine permite pesquisar por título, navegar por filmes populares e ver detalhes (sinopse, duração, nota). Também é possível filtrar resultados por ano de lançamento.
 
-    **Pré-requisitos**
-    - Node.js (>=16) e npm
-    - Chave de API do The Movie Database (TMDB)
+  Principais funcionalidades
+  - Busca por título (com paginação)
+  - Filtro por ano (opcional)
+  - Modal com detalhes do filme (sinopse, duração, nota média)
+  - Carregamento de pôsteres via CDN do TMDB
 
-    **Como configurar**
-    1. Crie uma chave no TMDB: https://www.themoviedb.org/
-    2. Copie a chave e crie um arquivo `.env` na raiz do projeto com o conteúdo:
+  Tecnologias
+  -----------
 
-    ```
-    VITE_TMDB_API_KEY=SEU_TOKEN_AQUI
-    ```
+  - React + TypeScript
+  - Vite como bundler e dev server
 
-    3. Instale dependências e rode o servidor de desenvolvimento (PowerShell):
+  Pré-requisitos
+  --------------
 
-    ```powershell
-    npm install
-    npm run dev
-    ```
+  - Node.js (recomendado >= 16)
+  - npm
+  - Chave de API do The Movie Database (TMDB)
 
-    4. Abra `http://localhost:5173` no navegador.
+  Como configurar localmente
+  --------------------------
 
-    **Comandos úteis**
-    - Desenvolvimento: `npm run dev`
-    - Build produção: `npm run build`
-    - Preview do build: `npm run preview`
+  1. Obtenha uma chave de API no TMDB: https://www.themoviedb.org/
+  2. Na raiz do projeto, crie um arquivo `.env` com a variável:
 
-    **Notas**
-    - Nunca comite arquivos que contenham chaves reais (o `.env` está listado em `.gitignore`). Use o arquivo `.env.example` como referência.
-    - Se o Vite estiver rodando, reinicie o servidor ao alterar o `.env` para que as variáveis sejam recarregadas.
+  ```text
+  VITE_TMDB_API_KEY=SEU_TOKEN_AQUI
+  ```
 
-    Copyright © 2025 | Feito com amor 💜 e persistência 🚀
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+  3. Instale dependências e rode o projeto (PowerShell):
+
+  ```powershell
+  npm install
+  npm run dev
+  ```
+
+  4. Abra `http://localhost:5173` no navegador.
+
+  Comandos úteis
+  ---------------
+
+  - Desenvolvimento: `npm run dev`
+  - Build (produção): `npm run build`
+  - Visualizar build: `npm run preview`
+
+  Boas práticas / Observações
+  ---------------------------
+
+  - Não comite o arquivo `.env` com a sua chave real (o `.env` está listado em `.gitignore`).
+  - Use `.env.example` como referência para variáveis necessárias.
+  - Depois de alterar o `.env`, reinicie o Vite para que as variáveis de ambiente sejam recarregadas.
+
+  Licença / Créditos
+  ------------------
+
+  Os dados e imagens são fornecidos pelo The Movie Database (TMDB). Consulte as condições de uso da API no site oficial.
+
+  Copyright © 2025 | Feito com amor 💜 e persistência 🚀
