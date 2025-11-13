@@ -17,3 +17,5 @@ npm run dev
 4. Abra `http://localhost:5173` no navegador.
 
 Observação: este exemplo busca filmes populares por padrão e permite pesquisar por título. Não exponha sua chave em repositórios públicos.
+
+Copyright © 2025 | Feito com amor 💜 e persistência 🚀
