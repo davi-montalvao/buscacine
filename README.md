@@ -19,55 +19,48 @@ If you are developing a production application, we recommend updating the config
 export default defineConfig([
   globalIgnores(['dist']),
   {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+    # BuscaCine
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+    BuscaCine é uma plataforma para buscar e descobrir filmes, séries e atores usando a API do TMDB.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
+    **Resumo rápido**
+    - Busca por título com paginação.
+    - Filtro opcional por ano de lançamento.
+    - Modal com detalhes do filme (sinopse, duração, nota).
+    - Imagens de pôster carregadas via CDN do TMDB.
+
+    **Tecnologias**
+    - React + TypeScript + Vite
+
+    **Pré-requisitos**
+    - Node.js (>=16) e npm
+    - Chave de API do The Movie Database (TMDB)
+
+    **Como configurar**
+    1. Crie uma chave no TMDB: https://www.themoviedb.org/
+    2. Copie a chave e crie um arquivo `.env` na raiz do projeto com o conteúdo:
+
+    ```
+    VITE_TMDB_API_KEY=SEU_TOKEN_AQUI
+    ```
+
+    3. Instale dependências e rode o servidor de desenvolvimento (PowerShell):
+
+    ```powershell
+    npm install
+    npm run dev
+    ```
+
+    4. Abra `http://localhost:5173` no navegador.
+
+    **Comandos úteis**
+    - Desenvolvimento: `npm run dev`
+    - Build produção: `npm run build`
+    - Preview do build: `npm run preview`
+
+    **Notas**
+    - Nunca comite arquivos que contenham chaves reais (o `.env` está listado em `.gitignore`). Use o arquivo `.env.example` como referência.
+    - Se o Vite estiver rodando, reinicie o servidor ao alterar o `.env` para que as variáveis sejam recarregadas.
+
+    Copyright © 2025 | Feito com amor 💜 e persistência 🚀
         project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
