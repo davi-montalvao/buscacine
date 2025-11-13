@@ -1,4 +1,3 @@
-import React from 'react'
 import { IMAGE_BASE } from '../api/tmdb'
 
 type Movie = {
@@ -15,6 +14,9 @@ export default function MovieCard({ movie, onClick }: { movie: Movie; onClick: (
   return (
     <button className="movie-card" onClick={() => onClick(movie.id)} aria-label={movie.title}>
       {poster ? <img src={poster} alt={movie.title} /> : <div className="poster-placeholder">Sem imagem</div>}
+      {movie.vote_average !== undefined && movie.vote_average !== null && (
+        <div className="rating-badge">{movie.vote_average.toFixed(1)}</div>
+      )}
       <div className="movie-info">
         <h3>{movie.title}</h3>
         <div className="meta">

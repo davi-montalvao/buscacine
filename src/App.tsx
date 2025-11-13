@@ -12,8 +12,7 @@ function App() {
         <Home />
       </main>
       <footer className="app-footer">
-        <div>Powered by TMDB • exemplo educacional</div>
-        <div className="copyright">Copyright © 2025 | Feito com amor 💜 e persistência 🚀</div>
+         <div className="copyright">Copyright © 2025 | Feito com amor 💜 e persistência 🚀</div>
       </footer>
     </div>
   )

@@ -20,6 +20,7 @@ export default function Home() {
   const [selected, setSelected] = useState<number | null>(null)
   const [details, setDetails] = useState<any | null>(null)
   const [yearFilter, setYearFilter] = useState<string>('')
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     fetchPopular(1)
@@ -28,12 +29,14 @@ export default function Home() {
   async function fetchPopular(p = 1) {
     try {
       setLoading(true)
+      setError(null)
       const data = await tmdb.getPopular(p)
       setMovies(data.results || [])
       setTotalPages(data.total_pages ?? null)
       setPage(p)
     } catch (err) {
       console.error(err)
+      setError(err instanceof Error ? err.message : String(err))
     } finally {
       setLoading(false)
     }
@@ -44,6 +47,7 @@ export default function Home() {
     if (!query) return fetchPopular()
     try {
       setLoading(true)
+      setError(null)
       const data = await tmdb.searchMovies(query, p)
       // apply optional year filter client-side
       let results = data.results || []
@@ -55,6 +59,7 @@ export default function Home() {
       setPage(p)
     } catch (err) {
       console.error(err)
+      setError(err instanceof Error ? err.message : String(err))
     } finally {
       setLoading(false)
     }
@@ -64,10 +69,12 @@ export default function Home() {
     setSelected(id)
     try {
       setLoading(true)
+      setError(null)
       const d = await tmdb.getMovieDetails(id)
       setDetails(d)
     } catch (err) {
       console.error(err)
+      setError(err instanceof Error ? err.message : String(err))
     } finally {
       setLoading(false)
     }
@@ -101,6 +108,12 @@ export default function Home() {
       </form>
 
       {loading && <p className="loading">Carregando...</p>}
+      {error && (
+        <div className="error-box" role="alert">
+          <strong>Erro:</strong> {error}
+          <div className="error-actions">Verifique se você criou um arquivo <code>.env</code> com <code>VITE_TMDB_API_KEY</code>.</div>
+        </div>
+      )}
 
       <div className="movies-grid">
         {movies.length === 0 && !loading && <p>Nenhum resultado.</p>}
