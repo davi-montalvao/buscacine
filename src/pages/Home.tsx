@@ -17,7 +17,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false)
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState<number | null>(null)
-  const [selected, setSelected] = useState<number | null>(null)
+  const [, setSelected] = useState<number | null>(null)
   const [details, setDetails] = useState<any | null>(null)
   const [yearFilter, setYearFilter] = useState<string>('')
   const [error, setError] = useState<string | null>(null)

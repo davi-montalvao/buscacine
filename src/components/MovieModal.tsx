@@ -1,4 +1,3 @@
-import React from 'react'
 import { IMAGE_BASE } from '../api/tmdb'
 
 type Details = {
