@@ -65,15 +65,16 @@ body {
 
 /* App specific styles */
 .app-header {
-  text-align: left;
+  text-align: center;
   margin-bottom: 1.25rem;
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 .app-header h1 { margin: 0; font-size: 1.8rem; letter-spacing: -0.5px; }
-.subtitle { margin: 0.25rem 0 0.5rem 0; color: var(--muted); }
+.subtitle { margin: 0.25rem 0 0.5rem 0; color: var(--muted); text-align: center }
 
-.app-footer { margin-top: 2rem; color: #999; font-size: 0.9rem; }
+.app-footer { margin-top: 2rem; color: #999; font-size: 0.9rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.03); }
 
 .app-footer .copyright {
   margin-top: 0.25rem;
@@ -108,8 +109,8 @@ body {
 
 .movies-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-  gap: 1rem 1.2rem;
+  grid-template-columns: repeat(4, 1fr); /* 4 filmes por linha no desktop */
+  gap: 1.5rem 1.6rem;
   align-items: start;
 }
 
@@ -127,8 +128,8 @@ body {
   transition: transform 180ms ease, box-shadow 180ms ease;
   will-change: transform, box-shadow;
 }
-.movie-card img { width: 100%; height: 250px; object-fit: cover; display: block; }
-.poster-placeholder { width: 100%; height: 250px; display: flex; align-items: center; justify-content: center; background: #2a2a2a; color: #999; }
+.movie-card img { width: 100%; height: 300px; object-fit: cover; display: block; }
+.poster-placeholder { width: 100%; height: 300px; display: flex; align-items: center; justify-content: center; background: #2a2a2a; color: #999; }
 .movie-info { padding: 0.6rem; }
 .movie-info h3 { margin: 0 0 0.25rem 0; font-size: 1rem; }
 .meta { display: flex; justify-content: space-between; font-size: 0.85rem; color: #bbb; }
@@ -149,6 +150,22 @@ body {
   .modal-body { flex-direction: column; align-items: center }
   .modal-poster { width: 100%; max-width: 300px }
 }
+
+
+/* medium screens: 3 columns */
+@media (max-width: 1100px) {
+  .movies-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Mobile: 2 filmes por linha and reduced poster height */
+@media (max-width: 720px) {
+  .movies-grid { grid-template-columns: repeat(2, 1fr); }
+  .movie-card img, .poster-placeholder { height: 180px }
+}
+
+/* Center footer */
+.app-footer { text-align: center; }
+.app-footer div { line-height: 1.4 }
 
 .pagination { display: flex; gap: 0.75rem; align-items: center; justify-content: center; margin-top: 1rem; }
 .pagination button { padding: 0.45rem 0.75rem; border-radius: 6px; }
