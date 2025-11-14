@@ -1,5 +1,5 @@
 import { IMAGE_BASE } from '../api/tmdb'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 type Details = {
   id: number
@@ -31,6 +31,44 @@ export default function MovieModal({ movie, onClose }: { movie: Details | null; 
     return () => {
       clearTimeout(t)
       window.removeEventListener('keydown', onKey)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // lock body scroll while modal is open (preserve scroll position)
+  const scrollYRef = useRef<number | null>(null)
+  useEffect(() => {
+    // save current scroll
+    const scrollY = window.scrollY || document.documentElement.scrollTop
+    scrollYRef.current = scrollY
+
+    // apply lock
+    const body = document.body
+    body.style.position = 'fixed'
+    body.style.top = `-${scrollY}px`
+    body.style.left = '0'
+    body.style.right = '0'
+    body.style.width = '100%'
+    body.style.overflow = 'hidden'
+
+    // prevent touchmove on iOS background (extra layer of safety)
+    const prevent = (e: TouchEvent) => { e.preventDefault() }
+    document.addEventListener('touchmove', prevent, { passive: false })
+
+    return () => {
+      // restore body styles and scroll position
+      document.removeEventListener('touchmove', prevent)
+      body.style.position = ''
+      body.style.top = ''
+      body.style.left = ''
+      body.style.right = ''
+      body.style.width = ''
+      body.style.overflow = ''
+
+      if (scrollYRef.current !== null) {
+        window.scrollTo(0, scrollYRef.current)
+        scrollYRef.current = null
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
