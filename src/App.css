@@ -141,6 +141,7 @@ body {
 
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.78); display: flex; align-items: center; justify-content: center; z-index: 1200; padding: 1rem; }
 .modal { background: rgba(6,10,18,0.96); border-radius: 12px; max-width: 900px; width: 100%; color: inherit; padding: 1rem; position: relative; border: 1px solid rgba(255,255,255,0.03); box-shadow: 0 20px 60px rgba(0,0,0,0.7); max-height: calc(100vh - 3rem); overflow: auto; }
+.modal { -webkit-overflow-scrolling: touch; }
 .modal-body { display: flex; gap: 1rem; align-items: flex-start; }
 .modal-poster { width: 260px; max-height: 380px; object-fit: cover; border-radius: 6px; }
 .modal-info { flex: 1 }

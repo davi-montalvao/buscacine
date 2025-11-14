@@ -123,6 +123,7 @@ export default function MovieModal({ movie, onClose }: { movie: Details | null; 
 
   // lock body scroll while modal is open (preserve scroll position)
   const scrollYRef = useRef<number | null>(null)
+  const modalRef = useRef<HTMLDivElement | null>(null)
   useEffect(() => {
     // save current scroll
     const scrollY = window.scrollY || document.documentElement.scrollTop
@@ -137,8 +138,15 @@ export default function MovieModal({ movie, onClose }: { movie: Details | null; 
     body.style.width = '100%'
     body.style.overflow = 'hidden'
 
-    // prevent touchmove on iOS background (extra layer of safety)
-    const prevent = (e: TouchEvent) => { e.preventDefault() }
+    // prevent touchmove on iOS background but allow touch inside the modal
+    const prevent = (e: TouchEvent) => {
+      const target = e.target as Node | null
+      // if the touch event started inside the modal, allow it (so modal can scroll)
+      if (modalRef.current && target && modalRef.current.contains(target)) {
+        return
+      }
+      e.preventDefault()
+    }
     document.addEventListener('touchmove', prevent, { passive: false })
 
     return () => {
@@ -176,7 +184,7 @@ export default function MovieModal({ movie, onClose }: { movie: Details | null; 
 
   return (
     <div className={`modal-overlay ${visible ? 'is-open' : 'is-closing'}`} role="dialog" aria-modal="true" onClick={handleOverlayClick} onTransitionEnd={handleTransitionEnd}>
-      <div className={`modal ${isCompact ? 'modal--compact' : ''} ${visible ? 'is-open' : 'is-closing'}`} onClick={stopPropagation}>
+      <div ref={modalRef} className={`modal ${isCompact ? 'modal--compact' : ''} ${visible ? 'is-open' : 'is-closing'}`} onClick={stopPropagation}>
         <button className="modal-close" onClick={handleCloseRequest} aria-label="Fechar">×</button>
         <div className="modal-body">
           {poster ? <img src={poster} alt={movie.title} className="modal-poster" /> : <div className="poster-placeholder">Sem imagem</div>}
