@@ -138,19 +138,36 @@ export default function MovieModal({ movie, onClose }: { movie: Details | null; 
     body.style.width = '100%'
     body.style.overflow = 'hidden'
 
+
     // prevent touchmove on iOS background but allow touch inside the modal
-    const prevent = (e: TouchEvent) => {
+    const touchStartedInsideRef = { current: false }
+
+    const onTouchStart = (e: TouchEvent) => {
       const target = e.target as Node | null
-      // if the touch event started inside the modal, allow it (so modal can scroll)
       if (modalRef.current && target && modalRef.current.contains(target)) {
-        return
+        touchStartedInsideRef.current = true
+      } else {
+        touchStartedInsideRef.current = false
       }
+    }
+
+    const onTouchEnd = () => { touchStartedInsideRef.current = false }
+
+    const prevent = (e: TouchEvent) => {
+      if (touchStartedInsideRef.current) return
       e.preventDefault()
     }
+
+    document.addEventListener('touchstart', onTouchStart, { passive: true })
+    document.addEventListener('touchend', onTouchEnd, { passive: true })
+    document.addEventListener('touchcancel', onTouchEnd, { passive: true })
     document.addEventListener('touchmove', prevent, { passive: false })
 
     return () => {
       // restore body styles and scroll position
+      document.removeEventListener('touchstart', onTouchStart)
+      document.removeEventListener('touchend', onTouchEnd)
+      document.removeEventListener('touchcancel', onTouchEnd)
       document.removeEventListener('touchmove', prevent)
       body.style.position = ''
       body.style.top = ''

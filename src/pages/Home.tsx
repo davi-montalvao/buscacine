@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import tmdb from '../api/tmdb'
+import { isBlockedMovie } from '../config/blocked'
 import MovieCard from '../components/MovieCard'
 import MovieModal from '../components/MovieModal'
 
@@ -31,7 +32,8 @@ export default function Home() {
       setLoading(true)
       setError(null)
       const data = await tmdb.getPopular(p)
-      setMovies(data.results || [])
+      const results = (data.results || []).filter((m: any) => !isBlockedMovie(m.id))
+      setMovies(results)
       setTotalPages(data.total_pages ?? null)
       setPage(p)
     } catch (err) {
@@ -54,6 +56,8 @@ export default function Home() {
       if (yearFilter) {
         results = results.filter((m: any) => m.release_date?.startsWith(yearFilter))
       }
+      // filter blocked movies
+      results = results.filter((m: any) => !isBlockedMovie(m.id))
       setMovies(results)
       setTotalPages(data.total_pages ?? null)
       setPage(p)
@@ -66,6 +70,10 @@ export default function Home() {
   }
 
   async function openDetails(id: number) {
+    if (isBlockedMovie(id)) {
+      setError('Filme bloqueado e removido do catálogo.')
+      return
+    }
     setSelected(id)
     try {
       setLoading(true)

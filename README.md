@@ -79,6 +79,16 @@ export default defineConfig([
 
   - Não comite o arquivo `.env` com a sua chave real (o `.env` está listado em `.gitignore`).
   - Use `.env.example` como referência para variáveis necessárias.
+
+Fontes customizadas
+-------------------
+
+Se você quer usar a fonte `Mangueira` no projeto, coloque os arquivos de fonte (`.woff2`) em `public/fonts/` com os nomes:
+
+- `Mangueira-Regular.woff2`
+- `Mangueira-Bold.woff2`
+
+O projeto já inclui a declaração `@font-face` no CSS para carregar esses arquivos automaticamente. Se preferir, substitua os arquivos por versões diferentes ou altere os nomes no CSS (`src/App.css`).
   - Depois de alterar o `.env`, reinicie o Vite para que as variáveis de ambiente sejam recarregadas.
 
   Licença / Créditos

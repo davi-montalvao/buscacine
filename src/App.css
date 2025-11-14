@@ -1,5 +1,23 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* Primary app font — 'Mangueira' (local files expected in /public/fonts/)
+     If you don't have the font files, the browser will fall back to system fonts.
+  */
+  @font-face {
+    font-family: 'Mangueira';
+    src: url('/fonts/Mangueira-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Mangueira';
+    src: url('/fonts/Mangueira-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  font-family: 'Mangueira', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -20,6 +38,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Use border-box globally to avoid unexpected sizing on inputs */
+*, *::before, *::after { box-sizing: border-box }
 
 body {
   margin: 0;
@@ -107,6 +128,20 @@ body {
 }
 .search .search-actions { display: flex; gap: 0.5rem; }
 
+/* Mobile: center search action buttons and make them responsive */
+@media (max-width: 720px) {
+  .search { flex-direction: column; align-items: stretch; }
+  .search .search-actions { justify-content: center; width: 100%; gap: 0.6rem; }
+  .search .search-actions button { width: 48%; min-width: 100px; }
+  /* prevent inputs from growing vertically when the .search becomes column */
+  .search input { flex: 0 0 auto; width: 100%; }
+}
+
+@media (max-width: 420px) {
+  .search .search-actions { gap: 0.5rem; }
+  .search .search-actions button { width: 100%; display: block; }
+}
+
 .movies-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* 4 filmes por linha no desktop */
@@ -140,7 +175,7 @@ body {
 .rating-badge { position: absolute; top: 8px; right: 8px; background: linear-gradient(90deg, rgba(0,0,0,0.45), rgba(0,0,0,0.2)); color: #fff; padding: 0.25rem 0.45rem; border-radius: 8px; font-weight: 700; box-shadow: 0 6px 18px rgba(0,0,0,0.5); }
 
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.78); display: flex; align-items: center; justify-content: center; z-index: 1200; padding: 1rem; }
-.modal { background: rgba(6,10,18,0.96); border-radius: 12px; max-width: 900px; width: 100%; color: inherit; padding: 1rem; position: relative; border: 1px solid rgba(255,255,255,0.03); box-shadow: 0 20px 60px rgba(0,0,0,0.7); max-height: calc(100vh - 3rem); overflow: auto; }
+.modal { background: rgba(6,10,18,0.96); border-radius: 12px; max-width: 900px; width: 100%; color: inherit; padding: calc(1rem + env(safe-area-inset-top)); position: relative; border: 1px solid rgba(255,255,255,0.03); box-shadow: 0 20px 60px rgba(0,0,0,0.7); max-height: calc(var(--vh, 1vh) * 100 - 3rem); overflow: auto; padding-bottom: calc(1rem + env(safe-area-inset-bottom)); }
 .modal { -webkit-overflow-scrolling: touch; }
 .modal-body { display: flex; gap: 1rem; align-items: flex-start; }
 .modal-poster { width: 260px; max-height: 380px; object-fit: cover; border-radius: 6px; }
@@ -225,9 +260,40 @@ body {
   .modal-poster { width: 100%; max-width: 300px }
 }
 
+/* Mobile input sizing fixes: keep inputs usable and not overly tall */
+@media (max-width: 720px) {
+  .search input {
+    padding: 0.6rem 0.75rem;
+    height: 48px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+  }
+  .year-filter {
+    width: 48%;
+    max-width: 160px;
+    height: 48px;
+    align-self: center;
+  }
+}
+
+@media (max-width: 420px) {
+  .search input { height: 46px; padding: 0.5rem 0.6rem }
+  .year-filter { width: 100%; max-width: none }
+  .search .search-actions { width: 100%; display: flex; flex-direction: column; gap: 0.5rem }
+  .search .search-actions button { width: 100%; }
+}
+
 /* Ensure close button stays on top on small screens */
 @media (max-width: 420px) {
   .modal-close { width: 36px; height: 36px; font-size: 1.05rem; top: 10px; right: 10px; }
+}
+
+/* Mobile-specific modal sizing tweaks for small screens (iPhone 12 etc) */
+@media (max-width: 420px) {
+  .modal { max-width: 92vw; padding: calc(0.6rem + env(safe-area-inset-top)); max-height: calc(var(--vh,1vh) * 100 - 2rem); }
+  .country-dropdown-panel { width: 200px; max-width: 76vw }
+  .country-dropdown-list { max-height: 140px }
+  .modal-poster { max-height: 260px }
 }
 
 
