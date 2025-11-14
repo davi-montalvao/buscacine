@@ -178,6 +178,47 @@ body {
 .watch-label { font-size: 0.9rem; color: #ddd; }
 .muted { color: var(--muted); font-size: 0.9rem }
 
+/* country select */
+.country-select { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.06); color: inherit; padding: 0.35rem 0.5rem; border-radius: 8px }
+
+/* Improve select appearance and option contrast */
+.country-select {
+  color: #fff; /* text color when closed */
+  background: rgba(255,255,255,0.03);
+  min-width: 140px;
+  max-width: 220px;
+  width: auto;
+  padding-right: 1.2rem;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+.country-select:focus { box-shadow: 0 6px 20px rgba(92,76,255,0.12); outline: none }
+
+/* Option styling: try to guarantee readable text in dropdown lists */
+.country-select option {
+  color: #111 !important;
+  background: #fff !important;
+}
+
+/* Ensure the select's dropdown doesn't push layout (best-effort) */
+.country-select::-ms-expand { display: none }
+
+/* Custom country dropdown styles */
+.country-dropdown { position: relative; display: inline-block }
+.country-dropdown-toggle { background: rgba(255,255,255,0.03); color: #fff; border: 1px solid rgba(255,255,255,0.06); padding: 0.35rem 0.6rem; border-radius: 8px; display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer }
+.country-dropdown-toggle .caret { margin-left: 6px; opacity: 0.85 }
+.country-dropdown-panel { position: absolute; top: calc(100% + 8px); left: 0; background: rgba(6,10,18,0.98); border: 1px solid rgba(255,255,255,0.04); width: 260px; max-width: 80vw; border-radius: 8px; padding: 0.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.6); z-index: 1400 }
+.country-search { width: 100%; padding: 0.4rem 0.5rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.04); background: rgba(255,255,255,0.02); color: inherit; margin-bottom: 0.5rem }
+.country-dropdown-list { max-height: 200px; overflow: auto; display: flex; flex-direction: column; gap: 0.15rem; padding-right: 0.25rem }
+.country-dropdown-item { background: transparent; border: none; text-align: left; padding: 0.45rem 0.5rem; border-radius: 6px; color: #fff; cursor: pointer }
+.country-dropdown-item:hover { background: rgba(255,255,255,0.02) }
+.country-empty { padding: 0.4rem; color: var(--muted) }
+
+/* small loader */
+.loader { width: 28px; height: 28px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.08); border-top-color: var(--accent); animation: spin 800ms linear infinite; display: inline-block }
+@keyframes spin { to { transform: rotate(360deg) } }
+
 @media (max-width: 720px) {
   .modal-body { flex-direction: column; align-items: center }
   .modal-poster { width: 100%; max-width: 300px }

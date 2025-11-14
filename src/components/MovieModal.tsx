@@ -1,4 +1,4 @@
-import { IMAGE_BASE, getWatchProviders } from '../api/tmdb'
+import { IMAGE_BASE, getWatchProvidersCached as getWatchProviders } from '../api/tmdb'
 import { useEffect, useRef, useState } from 'react'
 
 type Details = {
@@ -21,6 +21,7 @@ export default function MovieModal({ movie, onClose }: { movie: Details | null; 
   const [visible, setVisible] = useState(false)
   const [providers, setProviders] = useState<any | null>(null)
   const [providersLoading, setProvidersLoading] = useState(false)
+  const [selectedCountry, setSelectedCountry] = useState<string | null>(null)
 
   useEffect(() => {
     // play open animation
@@ -57,6 +58,67 @@ export default function MovieModal({ movie, onClose }: { movie: Details | null; 
     loadProviders()
     return () => { mounted = false }
   }, [movie.id])
+
+  // when providers load, set default selected country
+  useEffect(() => {
+    if (!providers) return
+    const results = providers.results || {}
+    const userLang = navigator.language || 'pt-BR'
+    const countryGuess = userLang.includes('-') ? userLang.split('-')[1].toUpperCase() : 'BR'
+    const defaultCountry = results[countryGuess] ? countryGuess : Object.keys(results)[0] || null
+    setSelectedCountry(defaultCountry)
+  }, [providers])
+
+  // Custom country dropdown component (searchable, fixed height)
+  function CountryDropdown({ countries, value, onChange }: { countries: string[]; value: string | null; onChange: (c: string) => void }) {
+    const [open, setOpen] = useState(false)
+    const [q, setQ] = useState('')
+    const ref = useRef<HTMLDivElement | null>(null)
+
+    useEffect(() => {
+      function onDoc(e: MouseEvent) {
+        if (!ref.current) return
+        if (!ref.current.contains(e.target as Node)) setOpen(false)
+      }
+      document.addEventListener('click', onDoc)
+      return () => document.removeEventListener('click', onDoc)
+    }, [])
+
+    const filtered = countries.filter(c => {
+      if (!q) return true
+      return c.toLowerCase().includes(q.toLowerCase())
+    })
+
+    return (
+      <div className="country-dropdown" ref={ref}>
+        <button type="button" className="country-dropdown-toggle" onClick={() => setOpen(s => !s)} aria-haspopup="listbox" aria-expanded={open}>
+          {value || 'Selecionar...'}
+          <span className="caret">▾</span>
+        </button>
+        {open && (
+          <div className="country-dropdown-panel">
+            <input className="country-search" placeholder="Pesquisar país..." value={q} onChange={(e) => setQ(e.target.value)} />
+            <div role="listbox" className="country-dropdown-list">
+              {filtered.map(c => {
+                let name = c
+                try {
+                  // @ts-ignore
+                  const dn = new Intl.DisplayNames(['pt-BR'], { type: 'region' })
+                  name = dn.of(c) || c
+                } catch (_) { name = c }
+                return (
+                  <button key={c} type="button" className="country-dropdown-item" onClick={() => { onChange(c); setOpen(false); setQ('') }}>
+                    {name} ({c})
+                  </button>
+                )
+              })}
+              {filtered.length === 0 && <div className="country-empty">Nenhum país encontrado</div>}
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
 
 
   // lock body scroll while modal is open (preserve scroll position)
@@ -130,33 +192,41 @@ export default function MovieModal({ movie, onClose }: { movie: Details | null; 
               {providersLoading && <p className="muted">Carregando opções...</p>}
               {!providersLoading && providers && (() => {
                 const results = providers.results || {}
-                const userLang = navigator.language || 'pt-BR'
-                const countryGuess = userLang.includes('-') ? userLang.split('-')[1].toUpperCase() : 'BR'
-                const country = results[countryGuess] ? countryGuess : Object.keys(results)[0]
+                const countries = Object.keys(results)
+                if (countries.length === 0) return <p className="muted">Nenhuma informação disponível.</p>
+
+                const country = selectedCountry || countries[0]
                 const data = results[country]
                 if (!data) return <p className="muted">Nenhuma informação disponível.</p>
 
                 const categories: Array<[string,string]> = [['flatrate','Streaming'], ['ads','Com anúncios'], ['rent','Aluguel'], ['buy','Compra']]
 
                 return (
-                  <div className="watch-grid">
-                    {categories.map(([key,label]) => {
-                      const arr = (data as any)[key]
-                      if (!arr || arr.length === 0) return null
-                      return (
-                        <div key={key} className="watch-category">
-                          <strong className="watch-label">{label}</strong>
-                          <div className="watch-items">
-                            {arr.map((p: any) => (
-                              <a key={p.provider_id} className="watch-item" href={data.link || `https://www.themoviedb.org/movie/${movieId}`} target="_blank" rel="noreferrer">
-                                {p.logo_path ? <img src={`https://image.tmdb.org/t/p/w92${p.logo_path}`} alt={p.provider_name} /> : <span>{p.provider_name}</span>}
-                                <span className="watch-name">{p.provider_name}</span>
-                              </a>
-                            ))}
+                  <div>
+                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.5rem' }}>
+                      <label style={{ fontSize: '0.9rem', color: 'var(--muted)' }}>Região:</label>
+                      <CountryDropdown countries={countries} value={country} onChange={(c) => setSelectedCountry(c)} />
+                    </div>
+
+                    <div className="watch-grid">
+                      {categories.map(([key,label]) => {
+                        const arr = (data as any)[key]
+                        if (!arr || arr.length === 0) return null
+                        return (
+                          <div key={key} className="watch-category">
+                            <strong className="watch-label">{label}</strong>
+                            <div className="watch-items">
+                              {arr.map((p: any) => (
+                                <a key={p.provider_id} className="watch-item" href={data.link || `https://www.themoviedb.org/movie/${movieId}`} target="_blank" rel="noreferrer">
+                                  {p.logo_path ? <img src={`https://image.tmdb.org/t/p/w92${p.logo_path}`} alt={p.provider_name} /> : <span>{p.provider_name}</span>}
+                                  <span className="watch-name">{p.provider_name}</span>
+                                </a>
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      )
-                    })}
+                        )
+                      })}
+                    </div>
                   </div>
                 )
               })()}

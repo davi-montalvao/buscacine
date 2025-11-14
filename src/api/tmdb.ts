@@ -37,4 +37,13 @@ export async function getWatchProviders(id: number) {
   return fetchFrom(`/movie/${id}/watch/providers`)
 }
 
+// simple in-memory cache for watch providers during the session
+const _providersCache: Map<number, any> = new Map()
+export async function getWatchProvidersCached(id: number) {
+  if (_providersCache.has(id)) return _providersCache.get(id)
+  const data = await getWatchProviders(id)
+  _providersCache.set(id, data)
+  return data
+}
+
 export default { getPopular, searchMovies, getMovieDetails, getWatchProviders }
