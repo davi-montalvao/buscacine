@@ -139,16 +139,32 @@ body {
 .rating { background: linear-gradient(90deg, var(--accent), var(--accent-2)); color: white; padding: 0.18rem 0.5rem; border-radius: 999px; font-weight: 600; font-size: 0.85rem; }
 .rating-badge { position: absolute; top: 8px; right: 8px; background: linear-gradient(90deg, rgba(0,0,0,0.45), rgba(0,0,0,0.2)); color: #fff; padding: 0.25rem 0.45rem; border-radius: 8px; font-weight: 700; box-shadow: 0 6px 18px rgba(0,0,0,0.5); }
 
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1200; padding: 1rem; }
-.modal { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius: 12px; max-width: 900px; width: 100%; color: inherit; padding: 1rem; }
-.modal-body { display: flex; gap: 1rem; }
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.78); display: flex; align-items: center; justify-content: center; z-index: 1200; padding: 1rem; }
+.modal { background: rgba(6,10,18,0.96); border-radius: 12px; max-width: 900px; width: 100%; color: inherit; padding: 1rem; position: relative; border: 1px solid rgba(255,255,255,0.03); box-shadow: 0 20px 60px rgba(0,0,0,0.7); max-height: calc(100vh - 3rem); overflow: auto; }
+.modal-body { display: flex; gap: 1rem; align-items: flex-start; }
 .modal-poster { width: 260px; max-height: 380px; object-fit: cover; border-radius: 6px; }
 .modal-info { flex: 1 }
-.modal-close { background: transparent; border: none; color: #fff; font-size: 1.6rem; float: right; cursor: pointer; }
+.modal-close { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); color: #fff; font-size: 1.2rem; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 8px; position: absolute; top: 12px; right: 12px; cursor: pointer; }
+
+/* Compact modal when there's no overview/description */
+.modal--compact {
+  max-width: 720px;
+  padding: 0.75rem;
+}
+.modal--compact .modal-body { gap: 0.75rem; align-items: center; }
+.modal--compact .modal-poster { width: 220px; max-height: 320px; }
+.modal--compact .modal-info { display: flex; flex-direction: column; gap: 0.4rem; justify-content: center; }
+.modal--compact .meta { margin-top: 0.15rem; }
+.modal--compact .overview { display: none; }
 
 @media (max-width: 720px) {
   .modal-body { flex-direction: column; align-items: center }
   .modal-poster { width: 100%; max-width: 300px }
+}
+
+/* Ensure close button stays on top on small screens */
+@media (max-width: 420px) {
+  .modal-close { width: 36px; height: 36px; font-size: 1.05rem; top: 10px; right: 10px; }
 }
 
 
