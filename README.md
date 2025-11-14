@@ -1,19 +1,22 @@
 # React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este template fornece uma configuração mínima para iniciar um projeto React com Vite, incluindo HMR (Hot Module Replacement) e algumas regras de ESLint.
 
-Currently, two official plugins are available:
+Atualmente, dois plugins oficiais estão disponíveis:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+@vitejs/plugin-react – utiliza Babel (ou oxc quando usado com rolldown-vite) para Fast Refresh.
+
+@vitejs/plugin-react-swc – utiliza SWC para Fast Refresh.
 
 ## React Compiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+O React Compiler não está habilitado neste template devido ao impacto no desempenho durante o desenvolvimento e o build.
+Para adicioná-lo, consulte a documentação oficial:
+https://react.dev/learn/react-compiler/installation
 
-## Expanding the ESLint configuration
+## Expandindo a configuração do ESLint
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Se você estiver desenvolvendo uma aplicação para produção, recomenda-se atualizar a configuração para habilitar regras de lint com reconhecimento de tipos (type-aware lint rules).
 
 ```js
 export default defineConfig([
