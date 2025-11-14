@@ -1,4 +1,4 @@
-import { IMAGE_BASE } from '../api/tmdb'
+import { IMAGE_BASE, getWatchProviders } from '../api/tmdb'
 import { useEffect, useRef, useState } from 'react'
 
 type Details = {
@@ -16,8 +16,11 @@ export default function MovieModal({ movie, onClose }: { movie: Details | null; 
 
   const poster = movie.poster_path ? `${IMAGE_BASE}${movie.poster_path}` : undefined
   const isCompact = !movie.overview || movie.overview.trim().length === 0
+  const movieId = movie.id
 
   const [visible, setVisible] = useState(false)
+  const [providers, setProviders] = useState<any | null>(null)
+  const [providersLoading, setProvidersLoading] = useState(false)
 
   useEffect(() => {
     // play open animation
@@ -34,6 +37,27 @@ export default function MovieModal({ movie, onClose }: { movie: Details | null; 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // fetch watch providers for this movie
+  useEffect(() => {
+    let mounted = true
+    async function loadProviders() {
+      try {
+        setProvidersLoading(true)
+        const data = await getWatchProviders(movieId)
+        if (!mounted) return
+        setProviders(data || null)
+      } catch (err) {
+        console.error('Failed to load providers', err)
+        if (mounted) setProviders(null)
+      } finally {
+        if (mounted) setProvidersLoading(false)
+      }
+    }
+    loadProviders()
+    return () => { mounted = false }
+  }, [movie.id])
+
 
   // lock body scroll while modal is open (preserve scroll position)
   const scrollYRef = useRef<number | null>(null)
@@ -100,6 +124,43 @@ export default function MovieModal({ movie, onClose }: { movie: Details | null; 
             {movie.overview && movie.overview.trim().length > 0 && (
               <p className="overview">{movie.overview}</p>
             )}
+            {/* Onde assistir */}
+            <div className="watch-section">
+              <h3>Onde assistir</h3>
+              {providersLoading && <p className="muted">Carregando opções...</p>}
+              {!providersLoading && providers && (() => {
+                const results = providers.results || {}
+                const userLang = navigator.language || 'pt-BR'
+                const countryGuess = userLang.includes('-') ? userLang.split('-')[1].toUpperCase() : 'BR'
+                const country = results[countryGuess] ? countryGuess : Object.keys(results)[0]
+                const data = results[country]
+                if (!data) return <p className="muted">Nenhuma informação disponível.</p>
+
+                const categories: Array<[string,string]> = [['flatrate','Streaming'], ['ads','Com anúncios'], ['rent','Aluguel'], ['buy','Compra']]
+
+                return (
+                  <div className="watch-grid">
+                    {categories.map(([key,label]) => {
+                      const arr = (data as any)[key]
+                      if (!arr || arr.length === 0) return null
+                      return (
+                        <div key={key} className="watch-category">
+                          <strong className="watch-label">{label}</strong>
+                          <div className="watch-items">
+                            {arr.map((p: any) => (
+                              <a key={p.provider_id} className="watch-item" href={data.link || `https://www.themoviedb.org/movie/${movieId}`} target="_blank" rel="noreferrer">
+                                {p.logo_path ? <img src={`https://image.tmdb.org/t/p/w92${p.logo_path}`} alt={p.provider_name} /> : <span>{p.provider_name}</span>}
+                                <span className="watch-name">{p.provider_name}</span>
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )
+              })()}
+            </div>
           </div>
         </div>
       </div>

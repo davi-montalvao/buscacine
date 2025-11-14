@@ -33,4 +33,8 @@ export async function getMovieDetails(id: number) {
   return fetchFrom(`/movie/${id}`)
 }
 
-export default { getPopular, searchMovies, getMovieDetails }
+export async function getWatchProviders(id: number) {
+  return fetchFrom(`/movie/${id}/watch/providers`)
+}
+
+export default { getPopular, searchMovies, getMovieDetails, getWatchProviders }

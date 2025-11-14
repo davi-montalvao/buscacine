@@ -166,6 +166,18 @@ body {
 .modal.is-open { transform: translateY(0) scale(1); opacity: 1; }
 .modal.is-closing { transform: translateY(-8px) scale(0.995); opacity: 0; }
 
+/* Watch providers styles */
+.watch-section { margin-top: 0.8rem; }
+.watch-section h3 { margin: 0 0 0.4rem 0; font-size: 0.95rem; }
+.watch-grid { display: flex; flex-direction: column; gap: 0.6rem; }
+.watch-category { display: flex; flex-direction: column; gap: 0.3rem; }
+.watch-items { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.watch-item { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0.4rem; background: rgba(255,255,255,0.02); border-radius: 8px; text-decoration: none; color: inherit; border: 1px solid rgba(255,255,255,0.02); }
+.watch-item img { width: 48px; height: 24px; object-fit: contain; display: block; }
+.watch-name { font-size: 0.85rem; color: var(--muted); }
+.watch-label { font-size: 0.9rem; color: #ddd; }
+.muted { color: var(--muted); font-size: 0.9rem }
+
 @media (max-width: 720px) {
   .modal-body { flex-direction: column; align-items: center }
   .modal-poster { width: 100%; max-width: 300px }
